@@ -1,7 +1,7 @@
 const express = require("express");
 const morgan = require("morgan");
 var AccessToken = require("twilio").jwt.AccessToken;
-var VideoGrant = AccessToken.VoiceGrant;
+var VoiceGrant = AccessToken.VoiceGrant;
 var app = express();
 
 require("dotenv").config();
@@ -24,6 +24,7 @@ app.get("/token", function(request, response) {
 
   // Assign the generated identity to the token
   token.identity = identity;
+  const outgoingApplicationSid = "idudhdfffhadhfhagdjhfghdfgjhjhjhks";
 
   const voiceGrant = new VoiceGrant({
     outgoingApplicationSid: outgoingApplicationSid,
