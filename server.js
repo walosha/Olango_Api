@@ -2,7 +2,7 @@ require("dotenv").config();
 const AccessToken = require("twilio").jwt.AccessToken;
 const VoiceGrant = AccessToken.VoiceGrant;
 const VoiceResponse = require("twilio").twiml.VoiceResponse;
-const defaultIdentity = "alice";
+const defaultIdentity = "Olawale Afuye";
 const callerId = "client:quick_start";
 // Use a valid Twilio number by adding to your account via https://www.twilio.com/console/phone-numbers/verified
 const callerNumber = "+16157638542";
@@ -66,32 +66,28 @@ function tokenGenerator(request, response) {
  */
 function makeCall(request, response) {
   // The recipient of the call, a phone number or a client
-  var to = null;
+  var To = null;
   if (request.method == "POST") {
-    to = request.body.to;
+    To = request.body.To;
   } else {
-    to = request.query.to;
+    To = request.query.To;
   }
-
-  console.log("TO", typeof request.body.To);
-  console.log("body", request.body.To);
-  console.log("Query", request.query);
 
   const voiceResponse = new VoiceResponse();
 
-  if (!to) {
+  if (!To) {
     voiceResponse.say(
-      "Congratulations! You are welcome to Olango tranlation Application!"
+     defaultIdentity + " welcome to Olango tranlation Application!"
     );
-  } else if (isNumber(to)) {
+  } else if (isNumber(To)) {
     const dial = voiceResponse.dial({ callerId: callerNumber });
-    dial.number(to);
+    dial.number(To);
   } else {
     const dial = voiceResponse.dial({ callerId: callerId });
-    dial.client(to);
+    dial.client(To);
   }
 
-  console.log(to);
+  console.log(To);
   console.log("Response:" + voiceResponse.toString());
   return response.send(voiceResponse.toString());
 }
@@ -105,13 +101,13 @@ function makeCall(request, response) {
  */
 async function placeCall(request, response) {
   // The recipient of the call, a phone number or a client
-  var to = null;
+  var To = null;
   if (request.method == "POST") {
-    to = request.body.to;
+    To = request.body.To;
   } else {
-    to = request.query.to;
+    To = request.query.To;
   }
-  console.log(to);
+  console.log(To);
   // The fully qualified URL that should be consulted by Twilio when the call connects.
   var url =
     request.protocol + "://" + request.get("host") + "/incoming";
@@ -125,25 +121,25 @@ async function placeCall(request, response) {
 
   console.log(accountSid, apiKey, apiSecret);
 
-  if (!to) {
+  if (!To) {
     console.log("Calling default client:" + defaultIdentity);
     call = await client.api.calls.create({
       url: url,
-      to: "client:" + defaultIdentity,
+      To: "client:" + defaultIdentity,
       from: callerId,
     });
-  } else if (isNumber(to)) {
-    console.log("Calling number:" + to);
+  } else if (isNumber(To)) {
+    console.log("Calling number:" + To);
     call = await client.api.calls.create({
       url: url,
       to: to,
       from: callerNumber,
     });
   } else {
-    console.log("Calling client:" + to);
+    console.log("Calling client:" + To);
     call = await client.api.calls.create({
       url: url,
-      to: "client:" + to,
+      to: "client:" + To,
       from: callerId,
     });
   }
