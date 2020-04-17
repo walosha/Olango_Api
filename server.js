@@ -73,11 +73,12 @@ function makeCall(request, response) {
     to = request.query.to;
   }
 
+  console.log("to", to);
   const voiceResponse = new VoiceResponse();
 
   if (!to) {
     voiceResponse.say(
-      "Congratulations! You have made your first call! Good bye."
+      "Congratulations! You are welcome to Olango tranlation Application!"
     );
   } else if (isNumber(to)) {
     const dial = voiceResponse.dial({ callerId: callerNumber });
@@ -86,6 +87,8 @@ function makeCall(request, response) {
     const dial = voiceResponse.dial({ callerId: callerId });
     dial.client(to);
   }
+
+  console.log(to);
   console.log("Response:" + voiceResponse.toString());
   return response.send(voiceResponse.toString());
 }
