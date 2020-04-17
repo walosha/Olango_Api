@@ -118,30 +118,34 @@ async function placeCall(request, response) {
   const client = require("twilio")(apiKey, apiSecret, {
     accountSid,
   });
-
-  if (!To) {
-    console.log("Calling default client:" + defaultIdentity);
-    call = await client.api.calls.create({
-      url: url,
-      to: "client:" + defaultIdentity,
-      from: callerId,
-    });
-  } else if (isNumber(To)) {
-    console.log("Calling number:" + To);
-    call = await client.api.calls.create({
-      url: url,
-      to: to,
-      from: callerNumber,
-    });
-  } else {
-    console.log("Calling client:" + To);
-    call = await client.api.calls.create({
-      url: url,
-      to: "client:" + To,
-      from: callerId,
-    });
+  try {
+    if (!To) {
+      console.log("Calling default client:" + defaultIdentity);
+      call = await client.api.calls.create({
+        url: url,
+        to: "client:" + defaultIdentity,
+        from: callerId,
+      });
+    } else if (isNumber(To)) {
+      console.log("Calling number:" + To);
+      call = await client.api.calls.create({
+        url: url,
+        to: to,
+        from: callerNumber,
+      });
+    } else {
+      console.log("Calling client:" + To);
+      call = await client.api.calls.create({
+        url: url,
+        to: "client:" + To,
+        from: callerId,
+      });
+    }
+    console.log(call.sid);
+  } catch (error) {
+    console.log(error);
   }
-  console.log(call.sid);
+
   //call.then(console.log(call.sid));
   return response.send(call.sid);
 }
