@@ -74,8 +74,7 @@ function makeCall(request, response) {
   }
   body;
 
-  console.log("body", request.body);
-  console.log("body", request.query);
+  console.log("body", request);
 
   const voiceResponse = new VoiceResponse();
 
