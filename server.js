@@ -73,8 +73,8 @@ function makeCall(request, response) {
     to = request.query.to;
   }
 
-  console.log("TO", typeof request);
-  console.log("body", request);
+  console.log("TO", typeof request.body.To);
+  console.log("body", request.body.To);
   console.log("Query", request.query);
 
   const voiceResponse = new VoiceResponse();
