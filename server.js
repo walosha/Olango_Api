@@ -72,9 +72,9 @@ function makeCall(request, response) {
   } else {
     to = request.query.to;
   }
-  body;
 
-  console.log("body", request);
+  console.log("body", request.body);
+  console.log("body", request.query);
 
   const voiceResponse = new VoiceResponse();
 
