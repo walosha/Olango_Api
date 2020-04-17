@@ -77,7 +77,7 @@ function makeCall(request, response) {
 
   if (!To) {
     voiceResponse.say(
-     defaultIdentity + " welcome to Olango tranlation Application!"
+      defaultIdentity + " welcome to Olango tranlation Application!"
     );
   } else if (isNumber(To)) {
     const dial = voiceResponse.dial({ callerId: callerNumber });
@@ -119,13 +119,11 @@ async function placeCall(request, response) {
     accountSid,
   });
 
-  console.log(accountSid, apiKey, apiSecret);
-
   if (!To) {
     console.log("Calling default client:" + defaultIdentity);
     call = await client.api.calls.create({
       url: url,
-      To: "client:" + defaultIdentity,
+      to: "client:" + defaultIdentity,
       from: callerId,
     });
   } else if (isNumber(To)) {
