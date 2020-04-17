@@ -2,7 +2,7 @@ require("dotenv").config();
 const AccessToken = require("twilio").jwt.AccessToken;
 const VoiceGrant = AccessToken.VoiceGrant;
 const VoiceResponse = require("twilio").twiml.VoiceResponse;
-const defaultIdentity = "Olawale Afuye";
+const defaultIdentity = "alice";
 const callerId = "client:quick_start";
 // Use a valid Twilio number by adding to your account via https://www.twilio.com/console/phone-numbers/verified
 const callerNumber = "+16157638542";
@@ -118,6 +118,7 @@ async function placeCall(request, response) {
   const client = require("twilio")(apiKey, apiSecret, {
     accountSid,
   });
+  let call;
   try {
     if (!To) {
       console.log("Calling default client:" + defaultIdentity);
@@ -141,7 +142,7 @@ async function placeCall(request, response) {
         from: callerId,
       });
     }
-    console.log(call.sid);
+    console.log(call);
   } catch (error) {
     console.log(error);
   }
