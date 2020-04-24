@@ -46,9 +46,9 @@ exports.signup = catchAsync(async (req, res, next) => {
   const msg = {
     to: newUser.email,
     from: "admin@OlangoApp.ng",
-    subject: `${newUser.name}, Congratulation from Olango!`,
-    text: `You log Up with us now at ${new Date()}`,
-    html: ` <body><h3> Sign Up Alert! </h3>
+    subject: `Congratulations, welcome to Olango!`,
+    text: `You sign up with us`,
+    html: ` <body><h3> Sign Up Alert! ${new Date()} </h3>
     <p>Let's face it: We, the internet-using public, are constantly bombarded with prompts to sign up for and subscribe to all sorts of email communications. So as a brand, when someone takes the time to sift through all the chaos in order to intentionally sign up for your email communications, it's a big deal.
 
     In order to acknowledge how grateful they are to the folks who actually take the time to subscribe, Kate Spade uses a simple -- but effective -- tactic with their welcome emails: They say "Thank You" in big, bold lettering. And by placing that "Thank You" on an envelope, Kate Spade recreates the feeling of receiving an actual thank-you letter in the mail. (The 15% off discount code doesn't hurt either.)</p>
@@ -94,7 +94,7 @@ exports.signin = catchAsync(async (req, res, next) => {
   const msg = {
     to: user.email,
     from: "admin@OlangoApp.ng",
-    subject: `${user.name}, you just sign in!`,
+    subject: `${user.name}, you just sign in at ${new Date()}!`,
     text: `You loggin in now at ${new Date()}`,
     html: "<h1>Log In Alert</h1>",
   };
