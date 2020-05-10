@@ -30,7 +30,7 @@ exports.getTranslators = async function (req, res) {
 
   res.status(200).json({
     status: "sucess",
-    data: newTranslator,
+    data: translators,
   });
 };
 
