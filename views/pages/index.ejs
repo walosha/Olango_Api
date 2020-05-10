@@ -1,35 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="" />
-    <meta name="author" content="Dashboard" />
-    <meta
-      name="keyword"
-      content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina"
-    />
-    <title>Olango</title>
-    <!-- Favicons -->
-    <link href="img/favicon.png" rel="icon" />
-    <link href="img/apple-touch-icon.png" rel="apple-touch-icon" />
+  <%- include('../partials/head') %>
 
-    <!-- Bootstrap core CSS -->
-    <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-    <!--external css-->
-    <link href="lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
-    <link rel="stylesheet" type="text/css" href="css/zabuto_calendar.css" />
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="lib/gritter/css/jquery.gritter.css"
-    />
-    <!-- Custom styles for this template -->
-    <link href="css/style.css" rel="stylesheet" />
-    <link href="css/style-responsive.css" rel="stylesheet" />
-    <script src="lib/chart-master/Chart.js"></script>
-
-  </head>
 
   <body>
     <section id="container">
@@ -327,13 +299,13 @@
             >
               <a class="active" href="#">
                 <i class="fa fa-dashboard"></i>
-                <span>Phone numbers</span>
+                <span>Add Translator</span>
               </a>
             </li>
             <li class="sub-menu">
               <a href="javascript:;">
                 <i class="fa fa-desktop"></i>
-                <span>Add User</span>
+                <span>Create Admin</span>
               </a>
               <ul class="sub">
                 <li><a href="#">General</a></li>
@@ -345,7 +317,7 @@
             <li class="sub-menu">
               <a href="javascript:;">
                 <i class="fa fa-cogs"></i>
-                <span>Components</span>
+                <span>Settings</span>
               </a>
               <ul class="sub">
                 <li><a href="#">Grids</a></li>
@@ -677,14 +649,7 @@
       </section>
       <!--main content end-->
       <!--footer start-->
-      <footer class="site-footer">
-        <div class="text-center">
-          <p>&copy; Copyrights <strong>Olango</strong>. All Rights Reserved</p>
-          <a href="index.html#" class="go-top">
-            <i class="fa fa-angle-up"></i>
-          </a>
-        </div>
-      </footer>
+      <%- include('../partials/footer') %>
       <!--footer end-->
       <!-- Button trigger modal -->
       <!-- Modal -->
@@ -762,9 +727,6 @@
               >
                 Close
               </button>
-              <button type="button" class="save-number btn btn-primary">
-                Save changes
-              </button>
             </div>
           </div>
         </div>
@@ -822,7 +784,7 @@
             '<td>'+ language +'</td>' +
             '<td>'+ name +'</td>' +
             '<td>'+ phone +'</td>' +
-            '<td>'+ 'Edit' +'</td>';
+            '<td> <a class="btn btn-raised btn-danger">'+ 'Delete' +'</a></td>';
           row += '</tr>';
 
           formsData = {language,name,phone}

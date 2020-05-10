@@ -48,7 +48,6 @@ function tokenGenerator(request, response) {
   const token = new AccessToken(accountSid, apiKey, apiSecret);
   token.addGrant(voiceGrant);
   token.identity = identity;
-  console.log("Token:" + token.toJwt());
   return response.send(token.toJwt());
 }
 
@@ -109,8 +108,7 @@ async function placeCall(request, response) {
   }
   console.log(To);
   // The fully qualified URL that should be consulted by Twilio when the call connects.
-  var url =
-    request.protocol + "://" + request.get("host") + "/incoming";
+  var url = request.protocol + "://" + request.get("host") + "/incoming";
   console.log(url);
   const accountSid = process.env.ACCOUNT_SID;
   const apiKey = process.env.API_KEY;

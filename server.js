@@ -57,13 +57,13 @@ app.post("/signin", authController.signin);
 app.post("/signup", authController.signup);
 
 app.get("/adminLogin", function (request, response) {
-  response.render("login");
+  response.render("pages/login");
 });
 
 app.get("/", async function (request, response) {
   const translators = await Translator.find();
   console.log(translators);
-  response.render("index", { translators });
+  response.render("pages/index", { translators });
 });
 
 app.post("/", function (request, response) {
@@ -104,7 +104,7 @@ app.post("/formData", saveTranslator);
 app.get("/formData", getTranslators);
 
 app.all("*", function (request, response) {
-  response.render("404");
+  response.render("pages/404");
 });
 
 // Create an http server and run it
