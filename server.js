@@ -1,5 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const ejs = require("ejs");
+const path = require("path");
 const morgan = require("morgan");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
@@ -12,12 +14,20 @@ const makeCall = methods.makeCall;
 const placeCall = methods.placeCall;
 const incoming = methods.incoming;
 const welcome = methods.welcome;
+const {
+  saveTranslator,
+  getTranslators,
+  deleteTranslator,
+} = require("./controllers/translatorController");
+const Translator = require("./models/translatorModel");
+
 require("dotenv").config();
 
 // Create Express webapp
 const app = express();
 
 // parse application/x-www-form-urlencoded
+app.use(express.json());
 app.use(cors());
 app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
@@ -26,6 +36,10 @@ app.use(cookieParser());
 app.use(helmet());
 
 // Serving static files
+
+app.set("view engine", "ejs");
+
+app.use(express.static(path.join(__dirname, "public/")));
 
 mongoose
   .connect(process.env.DATABASE_LOCAL, {
@@ -42,13 +56,21 @@ mongoose
 app.post("/signin", authController.signin);
 app.post("/signup", authController.signup);
 
-app.get("/", function (request, response) {
-  response.send(welcome());
+app.get("/adminLogin", function (request, response) {
+  response.render("login");
+});
+
+app.get("/", async function (request, response) {
+  const translators = await Translator.find();
+  console.log(translators);
+  response.render("index", { translators });
 });
 
 app.post("/", function (request, response) {
   response.send(welcome());
 });
+
+app.get("/api/delete/:id", deleteTranslator);
 
 app.get("/accessToken", function (request, response) {
   tokenGenerator(request, response);
@@ -76,6 +98,13 @@ app.get("/incoming", function (request, response) {
 
 app.post("/incoming", function (request, response) {
   response.send(incoming());
+});
+
+app.post("/formData", saveTranslator);
+app.get("/formData", getTranslators);
+
+app.all("*", function (request, response) {
+  response.render("404");
 });
 
 // Create an http server and run it
