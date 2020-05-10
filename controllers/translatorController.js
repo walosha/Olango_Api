@@ -19,14 +19,14 @@ exports.saveTranslator = async function (req, res) {
 };
 
 exports.getTranslators = async function (req, res) {
-  const { name, phone, language } = req.body;
-  if (!name || !phone || !language) {
-    res.status(404).json({
-      status: "failed",
+  const translators = await Translator.find();
+
+  if (!translators && translators === []) {
+    res.status(200).json({
+      status: "sucess",
+      data: [],
     });
   }
-
-  const translators = await Translator.find();
 
   res.status(200).json({
     status: "sucess",
