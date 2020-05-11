@@ -1,24 +1,15 @@
 const express = require("express");
-const bodyParser = require("body-parser");
 const ejs = require("ejs");
 const path = require("path");
 const morgan = require("morgan");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const helmet = require("helmet");
-const methods = require("./router");
+const callController = require("./controllers/callController");
+const userController = require("./controllers/userController");
 const mongoose = require("mongoose");
 const authController = require("./controllers/authController");
-const tokenGenerator = methods.tokenGenerator;
-const makeCall = methods.makeCall;
-const placeCall = methods.placeCall;
-const incoming = methods.incoming;
-const welcome = methods.welcome;
-const {
-  saveTranslator,
-  getTranslators,
-  deleteTranslator,
-} = require("./controllers/translatorController");
+const translatorController = require("./controllers/translatorController");
 const Translator = require("./models/translatorModel");
 
 require("dotenv").config();
@@ -53,6 +44,7 @@ mongoose
     console.log("DB connected successfully!");
   });
 
+//USER ROUTES
 app.post("/signin", authController.signin);
 app.post("/signup", authController.signup);
 
@@ -60,48 +52,59 @@ app.get("/adminLogin", function (request, response) {
   response.render("pages/login");
 });
 
+app.post(
+  "/api/user/updateMe",
+  userController.uploadUserPhoto,
+  userController.resizeUserPhoto,
+  userController.updateMe
+);
+
+// VIEW ROUTES
 app.get("/", async function (request, response) {
   const translators = await Translator.find();
   console.log(translators);
   response.render("pages/index", { translators });
 });
 
-app.post("/", function (request, response) {
-  response.send(welcome());
+app.get("/api/delete/:id", translatorController.deleteTranslator);
+
+// TRANSLATOR ROUTES
+
+app.post("/formData", translatorController.saveTranslator);
+app.get("/formData", translatorController.getTranslators);
+
+// CALL ROUTES
+app.get("/accessToken", function (request, response) {
+  callController.tokenGenerator(request, response);
 });
 
-app.get("/api/delete/:id", deleteTranslator);
-
-app.get("/accessToken", function (request, response) {
-  tokenGenerator(request, response);
+app.post("/", function (request, response) {
+  response.send(callController.welcome());
 });
 
 app.post("/accessToken", function (request, response) {
-  tokenGenerator(request, response);
+  callController.tokenGenerator(request, response);
 });
 
 app.get("/makeCall", function (request, response) {
-  makeCall(request, response);
+  callController.makeCall(request, response);
 });
 
 app.post("/makeCall", function (request, response) {
-  makeCall(request, response);
+  callController.makeCall(request, response);
 });
 
-app.get("/placeCall", placeCall);
+app.get("/placeCall", callController.placeCall);
 
-app.post("/placeCall", placeCall);
+app.post("/placeCall", callController.placeCall);
 
 app.get("/incoming", function (request, response) {
-  response.send(incoming());
+  response.send(callController.incoming());
 });
 
 app.post("/incoming", function (request, response) {
-  response.send(incoming());
+  response.send(callController.incoming());
 });
-
-app.post("/formData", saveTranslator);
-app.get("/formData", getTranslators);
 
 app.all("*", function (request, response) {
   response.render("pages/404");
