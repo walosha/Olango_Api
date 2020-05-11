@@ -54,6 +54,7 @@ app.get("/adminLogin", function (request, response) {
 
 app.post(
   "/api/user/updateMe",
+  authController.protect,
   userController.uploadUserPhoto,
   userController.resizeUserPhoto,
   userController.updateMe

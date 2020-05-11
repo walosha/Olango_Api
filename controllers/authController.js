@@ -21,14 +21,12 @@ const createTokenAndSend = function (user, statusCode, res) {
   // SENDING JWY VIA COOKIES
   const cookiesOptions = {
     expires: new Date(
-      Date.now() +
-        process.env.JWT_COOOKIES_EXPIRES_IN * 24 * 60 * 60 * 1
+      Date.now() + process.env.JWT_COOOKIES_EXPIRES_IN * 24 * 60 * 60 * 1
     ),
     httpOnly: true,
   };
 
-  if (process.env.NODE_ENV === "production")
-    cookiesOptions.secure = true;
+  if (process.env.NODE_ENV === "production") cookiesOptions.secure = true;
 
   res.cookie("jwt", token, cookiesOptions);
 
@@ -66,9 +64,7 @@ exports.signin = catchAsync(async (req, res, next) => {
   console.log(email, password);
 
   if (!email || !password) {
-    return next(
-      new AppError("Please provide an email or password!", 400)
-    );
+    return next(new AppError("Please provide an email or password!", 400));
   }
 
   const user = await User.findOne({ email }).select("+password");
@@ -77,14 +73,9 @@ exports.signin = catchAsync(async (req, res, next) => {
 
   console.log(user);
 
-  if (
-    !user ||
-    !(await user.correctPassword(password, user.password))
-  ) {
+  if (!user || !(await user.correctPassword(password, user.password))) {
     return next(
-      new AppError(
-        "You have supplied an invalid emaill or password!"
-      ),
+      new AppError("You have supplied an invalid emaill or password!"),
       401
     );
   }
@@ -128,37 +119,26 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   if (!token) {
     return next(
-      new AppError(
-        "You are not logged in, Please log in to get access",
-        401
-      )
+      new AppError("You are not logged in, Please log in to get access", 401)
     );
   }
 
   // VERIFY TOKEN
 
-  const decode = await promisify(jwt.verify)(
-    token,
-    process.env.JWT_SECRET
-  );
+  const decode = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
 
   const currentUser = await User.findById(decode.id);
 
   if (!currentUser) {
-    return next(
-      new AppError("User with this token no longer exist!", 401)
-    );
+    return next(new AppError("User with this token no longer exist!", 401));
   }
 
-  // CHECK IF USER CHANGE PASSWORD AFTER TOKEN WAS ISSUED
-  if (currentUser.passswordChangedAter(decode.iat)) {
-    return next(
-      new AppError(
-        "User changed password recently. Please log in again",
-        401
-      )
-    );
-  }
+  // // CHECK IF USER CHANGE PASSWORD AFTER TOKEN WAS ISSUED
+  // if (currentUser.passswordChangedAter(decode.iat)) {
+  //   return next(
+  //     new AppError("User changed password recently. Please log in again", 401)
+  //   );
+  // }
 
   //GRANT ACCESS TO PROTECTED ROUTE
 
@@ -181,9 +161,7 @@ exports.isLoggedIn = catchAsync(async (req, res, next) => {
       const currentUser = await User.findById(decode.id);
 
       if (!currentUser) {
-        return next(
-          new AppError("User with this token no longer exist!", 401)
-        );
+        return next(new AppError("User with this token no longer exist!", 401));
       }
 
       // CHECK IF USER CHANGE PASSWORD AFTER TOKEN WAS ISSUED
@@ -225,10 +203,7 @@ exports.forgetPassword = catchAsync(async (req, res, next) => {
 
   if (!user) {
     return next(
-      new AppError(
-        "No account is associated with this email address",
-        404
-      )
+      new AppError("No account is associated with this email address", 404)
     );
   }
   // GENERATE THE RANDOM RESET TOKEN
@@ -302,12 +277,7 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user.id).select("+password");
 
   //CHECK IF THE PASSWORD IS CORRECT
-  if (
-    !(await user.correctPassword(
-      req.body.passwordCurrent,
-      user.password
-    ))
-  ) {
+  if (!(await user.correctPassword(req.body.passwordCurrent, user.password))) {
     return next(new AppError("You password is in correct!", 401));
   }
 
