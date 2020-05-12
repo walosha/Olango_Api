@@ -17,11 +17,11 @@ const userSchema = new mongoose.Schema({
   },
   image: {
     type: String,
-    default: "profileImages/default.jpg",
+    default: "default.jpg",
   },
   location: {
     type: String,
-    default: "Please Provide a location",
+    default: "No location",
   },
   password: {
     type: String,
