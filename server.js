@@ -56,7 +56,7 @@ app.get("/adminLogin", function (request, response) {
 });
 
 app.get(
-  "/api/user/updateMe",
+  "/api/user/Me",
   authController.protect,
   userController.getMe,
   userController.getOne

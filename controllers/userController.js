@@ -60,8 +60,6 @@ exports.getOne = catchAsync(
       return next(new AppError("No User found with that ID", 404));
     }
 
-    query.__v = undefined;
-
     res.status(200).json({
       status: "success",
       data: {
