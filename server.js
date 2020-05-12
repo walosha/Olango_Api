@@ -51,7 +51,7 @@ mongoose
 app.post("/signin", authController.signin);
 app.post("/signup", authController.signup);
 
-app.get("/adminLogin", function (request, response) {
+app.get("/", function (request, response) {
   response.render("pages/login");
 });
 
@@ -73,10 +73,9 @@ app.post(
 app.post("/api/user/updateMe", authController.protect, userController.updateMe);
 
 // VIEW ROUTES
-app.get("/", async function (request, response) {
+app.get("/dashboard", async function (request, response) {
   const translators = await Translator.find();
-  console.log(translators);
-  response.render("pages/index", { translators });
+  response.render("pages/dashboard", { translators });
 });
 
 app.get("/api/delete/:id", translatorController.deleteTranslator);
