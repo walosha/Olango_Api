@@ -55,6 +55,13 @@ app.get("/adminLogin", function (request, response) {
   response.render("pages/login");
 });
 
+app.get(
+  "/api/user/updateMe",
+  authController.protect,
+  userController.getMe,
+  userController.getOne
+);
+
 app.post(
   "/api/user/upload",
   authController.protect,
