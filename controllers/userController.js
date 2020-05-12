@@ -1,24 +1,16 @@
 const multer = require("multer");
+const sharp = require("sharp");
 const User = require("../models/userModel");
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/AppError");
 
-const multerStorage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, "public/profileImages"),
-  filename: (req, file, cb) => {
-    const ext = file.mimetype.split("/")[1];
-    cb(null, `user-${req.user._id}-${Date.now()}.${ext}`);
-  },
-});
+const multerStorage = multer.memoryStorage();
+
 const multerFilter = (req, file, cb) => {
-  console.log(file);
   if (file.mimetype.startsWith("image")) {
     cb(null, true);
   } else {
-    cb(
-      new AppError("This is not an image!, please upload an Image", 400),
-      false
-    );
+    cb(new AppError("Not an image! Please upload only images.", 400), false);
   }
 };
 
@@ -31,11 +23,8 @@ exports.uploadUserPhoto = upload.single("photo");
 
 exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
   if (!req.file) return next();
-  console.log("file", req.file);
-  if (req.user) {
-    console.log("user Id", req.user.id);
-  }
-  req.file.filename = `user-${req.user._id}-${Date.now()}.jpeg`;
+
+  req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`;
 
   await sharp(req.file.buffer)
     .resize(500, 500)
@@ -75,14 +64,14 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   }
 
   // 2) Filtered out unwanted fields names that are not allowed to be updated
-  const filteredBody = filterObj(req.body, "name", "email");
-  if (req.file) filteredBody.photo = req.file.filename;
-
+  const filteredBody = filterObj(req.body, ["name", "email", "location"]);
+  if (req.file) filteredBody.image = req.file.filename;
   // 3) Update user document
-  const updatedUser = await User.findByIdAndUpdate(req.user._id, filteredBody, {
+  const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
     new: true,
-    runValidators: true,
   });
+  console.log("BODY", filteredBody);
+  console.log({ updatedUser });
 
   res.status(200).json({
     status: "success",

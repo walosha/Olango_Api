@@ -71,8 +71,6 @@ exports.signin = catchAsync(async (req, res, next) => {
 
   //  CHECK IF USER PASSWORD IS SAME AS THAT ON DATABASE
 
-  console.log(user);
-
   if (!user || !(await user.correctPassword(password, user.password))) {
     return next(
       new AppError("You have supplied an invalid emaill or password!"),
