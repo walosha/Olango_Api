@@ -44,7 +44,7 @@ userSchema.pre("save", async function (next) {
   // RUN THIS IF PASSWORD IS NOT MODIFIED
   if (!this.isModified("password")) return next();
   // RUN THIS IF PASSWORD IS CREATED OR MODIFIED
-  this.password = await bycrypt.hash(this.password, 16);
+  this.password = await bycrypt.hash(this.password, 8);
   this.passwordConfirm = undefined;
   next();
 });
