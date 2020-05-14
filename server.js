@@ -12,6 +12,7 @@ const mongoose = require("mongoose");
 const authController = require("./controllers/authController");
 const translatorController = require("./controllers/translatorController");
 const Translator = require("./models/translatorModel");
+const globalErrorHandler = require("./controllers/errorController");
 
 require("dotenv").config();
 
@@ -127,3 +128,5 @@ const port = process.env.PORT || 9000;
 app.listen(port, function () {
   console.log("server server running on *:" + port);
 });
+
+app.use(globalErrorHandler);
