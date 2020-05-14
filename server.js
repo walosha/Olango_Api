@@ -19,12 +19,12 @@ require("dotenv").config();
 // Create Express webapp
 const app = express();
 
-// parse application/x-www-form-urlencoded
+// parse application/x-www-form-urlencoded{ limit: "10kb"
 app.use(express.json());
 app.use(cors());
-app.use(express.json({ limit: "10kb" }));
+app.use(express.json());
 app.use(bodyParser.json());
-app.use(express.urlencoded({ extended: true, limit: "10kb" }));
+app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 app.use(cookieParser());
 app.use(helmet());
@@ -52,7 +52,7 @@ mongoose
 app.post("/signin", authController.signin);
 app.post("/signup", authController.signup);
 
-app.get("/dashboard", function (request, response) {
+app.get("/", function (request, response) {
   response.render("pages/login");
 });
 
@@ -74,7 +74,7 @@ app.post(
 app.post("/api/user/updateMe", authController.protect, userController.updateMe);
 
 // VIEW ROUTES
-app.get("/", async function (request, response) {
+app.get("/dashboard", async function (request, response) {
   const translators = await Translator.find();
   response.render("pages/dashboard", { translators });
 });
