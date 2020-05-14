@@ -52,7 +52,7 @@ mongoose
 app.post("/signin", authController.signin);
 app.post("/signup", authController.signup);
 
-app.get("/", function (request, response) {
+app.get("/dashboard", function (request, response) {
   response.render("pages/login");
 });
 
@@ -74,7 +74,7 @@ app.post(
 app.post("/api/user/updateMe", authController.protect, userController.updateMe);
 
 // VIEW ROUTES
-app.get("/dashboard", async function (request, response) {
+app.get("/", async function (request, response) {
   const translators = await Translator.find();
   response.render("pages/dashboard", { translators });
 });
@@ -124,8 +124,24 @@ app.all("*", function (request, response) {
 });
 
 app.use(globalErrorHandler);
+
 // Create an http server and run it
 const port = process.env.PORT || 9000;
-app.listen(port, function () {
+const server = app.listen(port, function () {
   console.log("server server running on *:" + port);
+});
+
+process.on("unhandledRejection", (err) => {
+  console.log("UNHANDLED REJECTION! 💥 Shutting down...");
+  console.log(err.name, err.message);
+  server.close(() => {
+    process.exit(1);
+  });
+});
+
+process.on("SIGTERM", () => {
+  console.log("👋 SIGTERM RECEIVED. Shutting down gracefully");
+  server.close(() => {
+    console.log("💥 Process terminated!");
+  });
 });

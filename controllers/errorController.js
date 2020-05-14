@@ -30,7 +30,7 @@ const handleJwtExpiredError = () =>
   );
 
 const sendErrorDev = (err, res) => {
-  res.status(err.statusCode).json({
+  res.status(err).json({
     status: err.status,
     error: err,
     message: err.message,
@@ -39,6 +39,8 @@ const sendErrorDev = (err, res) => {
 };
 
 const sendErrorProd = (err, res) => {
+  console.log("sendErrorDev", res.status);
+
   if (err.isOperational) {
     res.status(err.statusCode).json({
       status: err.status,
@@ -66,8 +68,7 @@ module.exports = (err, req, res, next) => {
     if (error.code === "validationError")
       error = handleValidationErrorDB(error);
     if (error.name === "JsonWebTokenError") error = handleJwtError();
-    if (error.name === "TokenExpiredError")
-      error = handleJwtExpiredError();
+    if (error.name === "TokenExpiredError") error = handleJwtExpiredError();
     sendErrorProd(error, res);
   }
 };
