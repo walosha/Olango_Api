@@ -123,10 +123,9 @@ app.all("*", function (request, response) {
   response.render("pages/404");
 });
 
+app.use(globalErrorHandler);
 // Create an http server and run it
 const port = process.env.PORT || 9000;
 app.listen(port, function () {
   console.log("server server running on *:" + port);
 });
-
-app.use(globalErrorHandler);
