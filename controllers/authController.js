@@ -2,10 +2,10 @@ const { promisify } = require("util");
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 const sgMail = require("@sendgrid/mail");
-
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/AppError");
 const User = require("../models/userModel");
+const Translator = require("../models/translatorModel");
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
@@ -40,7 +40,8 @@ const createTokenAndSend = function (user, statusCode, res) {
 };
 
 exports.signup = catchAsync(async (req, res, next) => {
-  const newUser = await User.create(req.body);
+  const { email, password } = req.body;
+  const newUser = await User.create({ email, password });
   const msg = {
     to: newUser.email,
     from: "admin@OlangoApp.ng",
@@ -91,6 +92,7 @@ exports.signin = catchAsync(async (req, res, next) => {
 });
 
 exports.logout = (req, res) => {
+  console.log("logged out");
   res.cookie("jwt", "Logged out", {
     expires: new Date(Date.now() + 10 * 1000),
   });
@@ -188,6 +190,34 @@ exports.restrict = (...roles) => {
       );
     }
     next();
+  };
+};
+
+exports.restrictToAdmin = (...roles) => {
+  return async (req, res, next) => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return next(new AppError("Please provide an email or password!", 401));
+    }
+
+    const user = await User.findOne({ email }).select("+password");
+
+    //  CHECK IF USER PASSWORD IS SAME AS THAT ON DATABASE
+
+    if (!user || !(await user.correctPassword(password, user.password))) {
+      return next(
+        new AppError("You have supplied an invalid emaill or password!", 401)
+      );
+    }
+
+    if (!roles.includes(user.role)) {
+      return next(new AppError("You are not an Administrator!", 403));
+    }
+    user.password = undefined;
+    user.__v = undefined;
+
+    createTokenAndSend(user, 200, res);
   };
 };
 

@@ -2,6 +2,7 @@
 <html lang="en">
   <%- include('../partials/head') %>
   <body>
+    
     <!-- **********************************************************************************************************************************************************
       MAIN CONTENT
       *********************************************************************************************************************************************************** -->
@@ -15,27 +16,26 @@
           <div class="login-wrap">
             <input
               type="text"
-              class="form-control"
-              placeholder="User ID"
+              class="form-control email-login"
+              placeholder="Email Address"
               autofocus
             />
             <br />
             <input
               type="password"
-              class="form-control"
+              class="form-control password-login"
               placeholder="Password"
             />
             <label class="checkbox">
               <input type="checkbox" value="remember-me" /> Remember me
               <span class="pull-right">
-                <a data-toggle="modal" href="login.html#myModal">
+                <a data-toggle="modal" href="#">
                   Forgot Password?</a
                 >
               </span>
             </label>
             <button
-              class="btn btn-theme btn-block"
-              href="/"
+              class=" submitLogin btn btn-theme btn-block"
               type="submit"
             >
               <i class="fa fa-lock"></i> SIGN IN
@@ -103,5 +103,51 @@
     <!--BACKSTRETCH-->
     <!-- You can use an image of whatever size. This script will stretch to fit in any screen size.-->
     <script type="text/javascript" src="lib/jquery.backstretch.min.js"></script>
+    <script>
+      var email = document.querySelector('.email-login');
+      var password= document.querySelector('.password-login')
+      var submitBtn = document.querySelector('.submitLogin')
+
+      let hideAlert = () => {
+        let el = document.querySelector('.alert');
+         if (el) el.parentElement.removeChild(el);
+      };
+
+      function onLogin(e) {
+       e.preventDefault();
+        if (!email || !password){
+        return  alert('Please enter Email or Password')
+        }
+        var markup = `<div class="alert alert-success text-center" role="alert">
+      You signed in Successfully !
+    </div>`
+        
+           if(email.value && password.value){
+            $.post('/admin',{email: email.value,password:password.value}).done(function(res) {
+           if(res.status === 'sucess'){
+            document.querySelector('body').insertAdjacentHTML('afterbegin', markup);
+             setTimeout(function () {
+              hideAlert()
+               location.assign('/dashboard');
+             },2000)
+           }
+        }).fail(function(xhr, status, error) {
+             console.log({xhr, status, error})
+               // error handling
+            if (xhr){
+              markup = `<div class="alert alert-danger text-center" role="alert">
+                          ${xhr.responseJSON.message} !
+                        </div>`
+                        document.querySelector('body').insertAdjacentHTML('afterbegin', markup);
+                        window.setTimeout(hideAlert,2000)
+               }
+             });
+           }
+        
+        
+        
+      }
+      submitBtn.addEventListener('click',onLogin)
+    </script>
   </body>
 </html>

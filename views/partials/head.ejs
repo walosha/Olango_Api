@@ -17,4 +17,10 @@
   <!-- Custom styles for this template -->
   <link href="css/style.css" rel="stylesheet" />
   <link href="css/style-responsive.css" rel="stylesheet" />
+  <script>
+    console.log("cookies", Cookies.get("jwt"));
+    if (Cookies.get("jwt") == undefined) {
+      window.location.replace("/");
+    }
+  </script>
 </head>

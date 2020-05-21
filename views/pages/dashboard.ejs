@@ -273,7 +273,7 @@
         </div>
         <div class="top-menu">
           <ul class="nav pull-right top-menu">
-            <li><a class="logout" href="/">Logout</a></li>
+            <li><a class="logout logout-btn" >Logout</a></li>
           </ul>
         </div>
       </header>
@@ -770,6 +770,15 @@
           // (string | optional) the class name you want to apply to that specific message
           class_name: "my-sticky-class",
         });
+
+        var logoutBtn = document.querySelector('.logout-btn')
+
+        function logout() {
+          console.log('log out ')
+          $.get('/logout').then(()=> location.assign('/'))
+        }
+
+        logoutBtn.addEventListener('click',logout)
 
           var formsData = {}
 
