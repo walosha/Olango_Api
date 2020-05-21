@@ -104,6 +104,7 @@ exports.logout = (req, res) => {
 exports.protect = catchAsync(async (req, res, next) => {
   // CHECK TOKEN AND
   let token;
+  console.log("cookies", req.cookies.jwt);
 
   if (
     req.headers.authorization &&
