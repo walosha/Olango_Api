@@ -1,4 +1,5 @@
 const express = require("express");
+const fetch = require("node-fetch");
 const path = require("path");
 const morgan = require("morgan");
 const cors = require("cors");
@@ -15,7 +16,7 @@ const globalErrorHandler = require("./controllers/errorController");
 const app = express();
 
 // parse application/x-www-form-urlencoded{ limit: "10kb"
-app.use(express.json());
+
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -53,6 +54,31 @@ app.post(
   userController.resizeUserPhoto,
   userController.updateMe
 );
+
+app.post("/createUser", async function (req, res) {
+  const params = {
+    account_id: process.env.VOXIMPLANT_ACCOUNT_SID,
+    api_key: process.env.VOXIMPLANT_API_KEY,
+    user_name: req.body.userName,
+    user_display_name: req.body.screenName,
+    user_password: req.body.password,
+    application_id: process.env.VOXIMPLANT_APP_ID,
+  };
+
+  const queryString = Object.keys(params)
+    .map((key) => key + "=" + params[key])
+    .join("&");
+  try {
+    const response = await fetch(
+      `https://api.voximplant.com/platform_api/AddUser/?${queryString}`,
+      { method: "POST" }
+    );
+    const data = await response.json();
+    res.send(data);
+  } catch (error) {
+    console.log("error response", error);
+  }
+});
 
 app.post("/api/user/updateMe", authController.protect, userController.updateMe);
 
